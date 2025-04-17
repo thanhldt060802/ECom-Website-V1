@@ -19,6 +19,7 @@ public class InvoiceDetail {
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
+    private BigDecimal price;
     private Integer discountPercentage;
     private Integer quantity;
     private BigDecimal totalPrice;
@@ -47,6 +48,14 @@ public class InvoiceDetail {
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    public BigDecimal getPrice() {
+        return this.price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 
     public Integer getDiscountPercentage() {

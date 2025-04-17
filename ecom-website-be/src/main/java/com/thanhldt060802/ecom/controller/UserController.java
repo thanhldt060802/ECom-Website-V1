@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-@RequestMapping("ecom_v1/api/users")
+@RequestMapping("ecom_website_v1/api/users")
 public class UserController {
 
     @Autowired
@@ -19,35 +19,35 @@ public class UserController {
 
     @GetMapping("/")
     public ResponseEntity<List<User>> getAllUsers() {
-        return ResponseEntity.ok(this.userService.getAll());
+        return ResponseEntity.ok(this.userService.findAllUsers());
     }
 
     @GetMapping("/id/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        return ResponseEntity.ok(this.userService.getById(id));
+        return ResponseEntity.ok(this.userService.findUserById(id));
     }
 
     @GetMapping("/username/{username}")
     public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
-        return ResponseEntity.ok(this.userService.getByUsername(username));
+        return ResponseEntity.ok(this.userService.findUserByUsername(username));
     }
 
     @PostMapping("/")
-    public ResponseEntity<String> addUser(@RequestBody User newUser) {
-        this.userService.add(newUser);
-        return ResponseEntity.ok("Add success!");
+    public ResponseEntity<String> create(@RequestBody User newUser) {
+        this.userService.createUser(newUser);
+        return ResponseEntity.ok("Create user success!");
     }
 
     @PutMapping("/id/{id}")
     public ResponseEntity<String> updateUser(@PathVariable Long id, @RequestBody User updatingUser) {
-        this.userService.update(id, updatingUser);
-        return ResponseEntity.ok("Update success!");
+        this.userService.updateUser(id, updatingUser);
+        return ResponseEntity.ok("Update user success!");
     }
 
     @DeleteMapping("/id/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
-        this.userService.delete(id);
-        return ResponseEntity.ok("Delete success!");
+    public ResponseEntity<String> deleteUserById(@PathVariable Long id) {
+        this.userService.deleteUserById(id);
+        return ResponseEntity.ok("Delete user success!");
     }
 
 }

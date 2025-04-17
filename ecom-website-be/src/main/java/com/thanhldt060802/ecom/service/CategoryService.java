@@ -15,16 +15,36 @@ public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    public boolean isIdExisted(Long id) {
+    public boolean isCategoryExistedById(Long id) {
         return this.categoryRepository.existsById(id);
     }
 
-    public List<Category> getAll() {
+    public List<Category> findAllCategories() {
         return this.categoryRepository.findAll();
     }
 
-    public Category getById(Long id) {
-        return this.categoryRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid id!"));
+    public Category findCategoryById(Long id) {
+        return this.categoryRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Id of category is not valid!"));
+    }
+
+    public void createCategory(Category newCategory) {
+        this.categoryRepository.save(newCategory);
+    }
+
+    public void updateCategory(Long id, Category updatingCategory) {
+        Category foundCategory = this.categoryRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Id of category is not valid!"));
+        foundCategory.setName(updatingCategory.getName());
+        foundCategory.setDescription(updatingCategory.getDescription());
+
+        this.categoryRepository.save(foundCategory);
+    }
+
+    public void deleteCategoryById(Long id) {
+        if (!this.isCategoryExistedById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Id of category is not valid!");
+        }
+
+        this.categoryRepository.deleteById(id);
     }
 
 }

@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-@RequestMapping("ecom_v1/api/products")
+@RequestMapping("ecom_website_v1/api/products")
 public class ProductController {
 
     @Autowired
@@ -18,17 +18,35 @@ public class ProductController {
 
     @GetMapping("/")
     public ResponseEntity<List<Product>> getAllProducts() {
-        return ResponseEntity.ok(this.productService.getAll());
+        return ResponseEntity.ok(this.productService.findAllProducts());
     }
 
     @GetMapping("/id/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable Long id) {
-        return ResponseEntity.ok(this.productService.getById(id));
+        return ResponseEntity.ok(this.productService.findProductById(id));
     }
 
     @GetMapping("/category-id/{categoryId}")
     public ResponseEntity<List<Product>> getAllProductsByCategoryId(@PathVariable Long categoryId) {
-        return ResponseEntity.ok(this.productService.getAllByCategoryId(categoryId));
+        return ResponseEntity.ok(this.productService.findAllProductsByCategoryId(categoryId));
+    }
+
+    @PostMapping("/")
+    public ResponseEntity<String> createProduct(@RequestBody Product newProduct) {
+        this.productService.createProduct(newProduct);
+        return ResponseEntity.ok("Create product success!");
+    }
+
+    @PutMapping("/id/{id}")
+    public ResponseEntity<String> updateProduct(@PathVariable Long id, @RequestBody Product updatingProduct) {
+        this.productService.updateProduct(id, updatingProduct);
+        return ResponseEntity.ok("Update product success!");
+    }
+
+    @DeleteMapping("id/{id}")
+    public ResponseEntity<String> deleteProductById(@PathVariable Long id) {
+        this.productService.deleteProductById(id);
+        return ResponseEntity.ok("Delete product success!");
     }
 
 }

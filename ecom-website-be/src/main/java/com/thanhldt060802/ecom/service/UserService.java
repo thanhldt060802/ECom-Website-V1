@@ -16,50 +16,50 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public boolean isIdExisted(Long id) {
+    public boolean isUserExistedById(Long id) {
         return this.userRepository.existsById(id);
     }
 
-    public boolean isUsernameExisted(String username) {
+    public boolean isUserExistedByUsername(String username) {
         return this.userRepository.existsByUsername(username);
     }
 
-    public boolean isEmailExisted(String email) {
+    public boolean isUserExistedByEmail(String email) {
         return this.userRepository.existsByEmail(email);
     }
 
-    public List<User> getAll() {
+    public List<User> findAllUsers() {
         return this.userRepository.findAll();
     }
 
-    public User getById(Long id) {
-        return this.userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid id!"));
+    public User findUserById(Long id) {
+        return this.userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Id of user is not valid!"));
     }
 
-    public User getByUsername(String username) {
-        return this.userRepository.findByUsername(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid username!"));
+    public User findUserByUsername(String username) {
+        return this.userRepository.findByUsername(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Username of user is not valid!"));
     }
 
-    public User add(User newUser) {
-        if(this.isUsernameExisted(newUser.getUsername())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username already exists!");
+    public void createUser(User newUser) {
+        if(this.isUserExistedByUsername(newUser.getUsername())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username of user already exists!");
         }
-        if(this.isEmailExisted(newUser.getEmail())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email already exists!");
+        if(this.isUserExistedByEmail(newUser.getEmail())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email of user already exists!");
         }
         newUser.setCart(new Cart());
         newUser.getCart().setUser(newUser);
         newUser.setRole("ROLE_CUSTOMER");
 
-        return this.userRepository.save(newUser);
+        this.userRepository.save(newUser);
     }
 
-    public User update(Long id, User updatingUser) {
-        User foundUser = this.userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid id!"));
+    public void updateUser(Long id, User updatingUser) {
+        User foundUser = this.userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Id of user is not valid!"));
         foundUser.setPassword(updatingUser.getPassword());
         if(!updatingUser.getEmail().equals(foundUser.getEmail())) {
-            if(this.isEmailExisted(updatingUser.getEmail())) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email already exists!");
+            if(this.isUserExistedByEmail(updatingUser.getEmail())) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email of user already exists!");
             }else {
                 foundUser.setEmail(updatingUser.getEmail());
             }
@@ -68,12 +68,12 @@ public class UserService {
         foundUser.setName(updatingUser.getName());
         foundUser.setAddress(updatingUser.getAddress());
 
-        return this.userRepository.save(foundUser);
+        this.userRepository.save(foundUser);
     }
 
-    public void delete(Long id) {
-        if(!this.isIdExisted(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid id!");
+    public void deleteUserById(Long id) {
+        if(!this.isUserExistedById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Id of user is not valid!");
         }
 
         this.userRepository.deleteById(id);

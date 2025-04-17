@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-@RequestMapping("ecom_v1/api/categories")
+@RequestMapping("ecom_website_v1/api/categories")
 public class CategoryController {
 
     @Autowired
@@ -18,12 +18,30 @@ public class CategoryController {
 
     @GetMapping("/")
     public ResponseEntity<List<Category>> getAllCategories() {
-        return ResponseEntity.ok(this.categoryService.getAll());
+        return ResponseEntity.ok(this.categoryService.findAllCategories());
     }
 
     @GetMapping("/id/{id}")
     public ResponseEntity<Category> getCategoryById(@PathVariable Long id) {
-        return ResponseEntity.ok(this.categoryService.getById(id));
+        return ResponseEntity.ok(this.categoryService.findCategoryById(id));
+    }
+
+    @PostMapping("/")
+    public ResponseEntity<String> createCategory(@RequestBody Category newCategory) {
+        this.categoryService.createCategory(newCategory);
+        return ResponseEntity.ok("Create category success!");
+    }
+
+    @PutMapping("/id/{id}")
+    public ResponseEntity<String> updateCategory(@PathVariable Long id, @RequestBody Category updatingCategory) {
+        this.categoryService.updateCategory(id, updatingCategory);
+        return ResponseEntity.ok("Update category success!");
+    }
+
+    @DeleteMapping("/id/{id}")
+    public ResponseEntity<String> deleteCategoryById(@PathVariable Long id) {
+        this.categoryService.deleteCategoryById(id);
+        return ResponseEntity.ok("Delete category success!");
     }
 
 }
